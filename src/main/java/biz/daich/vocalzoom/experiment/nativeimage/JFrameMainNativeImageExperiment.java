@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 import biz.daich.vocalzoom.experiment.nativeimage.cmd.RawDataRecorderConfig;
 import biz.daich.vocalzoom.experiment.nativeimage.common.CommonUtils;
+import biz.daich.vocalzoom.experiment.nativeimage.common.SerializationTools;
 import picocli.CommandLine;
 
 import javax.swing.border.TitledBorder;
@@ -33,6 +34,10 @@ public class JFrameMainNativeImageExperiment extends JFrame {
 		RawDataRecorderConfig config = new RawDataRecorderConfig();
 		CommandLine processCmd = CommonUtils.processCmd(a, config, true);
 		l.trace("processCmd = {}", processCmd);
+		String json = SerializationTools.toPrettyJson(config);
+		config = SerializationTools.fromJson(json, RawDataRecorderConfig.class);
+		l.trace("RawDataRecorderConfig = {}", json);
+		l.trace("Config = {}", config);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
