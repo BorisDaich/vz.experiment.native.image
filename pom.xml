@@ -1,0 +1,873 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>biz.daich.vocalzoom</groupId>
+  <artifactId>experiment.native.image</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>biz.daich.vocalzoom.experiment.native.image</name>
+  <description>A demo project that has all the same dependencies and uses same classes as the main app for the sake of the experimenting and debuging of the docker build and native image compile	</description>
+
+	<properties>
+		<skipTests>true</skipTests>
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+		<maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
+
+		<version.spring>2.6.3</version.spring>
+		<version.lombok>1.18.22</version.lombok>
+		<version.log4j>2.17.1</version.log4j>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<jvm.run.options>
+			--add-opens
+			java.base/jdk.internal.misc=ALL-UNNAMED
+			--add-opens
+			java.base/java.io=ALL-UNNAMED
+			-Aproject=${project.groupId}/${project.artifactId}
+		</jvm.run.options>
+
+		<java.compile.options></java.compile.options>
+
+<!-- THIS SHOULD ACTIVATE The  webstart-publish-profile-id but it does not seems to work... -->
+		<webstart-publish-profile-id>true</webstart-publish-profile-id>
+
+		<executableName>uart-recorder</executableName>
+		<TheMainClass>biz.daich.vocalzoom.uart.ui.JFrameUartRecorder</TheMainClass>
+
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${version.spring}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+
+<!-- SPRING BOOT WEB -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-server</artifactId>
+			<version>2.5.4</version>
+		</dependency>
+ -->
+
+<!-- MQTT -->
+
+		<!-- https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3 -->
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+
+<!-- END of MQTT -->
+
+<!-- UART  see https://fazecast.github.io/jSerialComm/ -->
+		<dependency>
+			<groupId>com.fazecast</groupId>
+			<artifactId>jSerialComm</artifactId>
+			<version>[2.0.0,3.0.0)</version>
+		</dependency>
+<!-- END of UART -->
+
+<!-- CODDING PRODUCTIVITY -->
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+<!-- END of CODDING PRODUCTIVITY -->
+
+<!-- UTILITY LIBS -->
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>31.0.1-jre</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>[2.11.0,)</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<!-- <version>2.13.0</version> -->
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<!-- <version>2.13.0</version> -->
+		</dependency>
+		<!-- Needed to parse BSON of the RAW Data over MQTT-->
+		<dependency>
+			<groupId>de.undercouch</groupId>
+			<artifactId>bson4jackson</artifactId>
+			<version>2.13.1</version>
+		</dependency>
+
+<!-- Used by the MqttConnectionManager to do not secure communication with TLS host that has certificates issues -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+		</dependency>
+
+<!-- END of UTILITY LIBS -->
+
+<!--  ALGORITHMS -->
+
+
+<!--  END of ALGORITHMS -->
+
+<!-- SWING LIBS  -->
+
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout-swing</artifactId>
+			<version>5.2</version>
+		</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.formdev/jide-oss -->
+		<dependency>
+			<groupId>com.formdev</groupId>
+			<artifactId>jide-oss</artifactId>
+			<version>3.7.12</version>
+		</dependency>
+
+<!--
+		<dependency>
+			<groupId>com.jidesoft</groupId>
+			<artifactId>jide-oss</artifactId>
+			<version>3.6.18</version>
+		</dependency>
+ -->
+		<dependency>
+			<groupId>org.swinglabs.swingx</groupId>
+			<artifactId>swingx-all</artifactId>
+			<version>1.6.5-1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-binding</artifactId>
+			<version>2.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-forms</artifactId>
+			<version>1.9.0</version>
+		</dependency>
+		<!-- END of SWING LIBS  -->
+
+<!-- LOGGING -->
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-iostreams</artifactId>
+		</dependency>
+		
+				<!-- https://mvnrepository.com/artifact/com.lmax/disruptor -->
+		<!-- Required to make the log4j2 Async loggers and appenders to work correctly -->
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.4.4</version>
+		</dependency>
+		
+
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-jmx-gui -->
+
+<!--
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jmx-gui</artifactId>
+			<version>${version.log4j}</version>
+		</dependency>
+-->
+<!--
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+
+	-->
+
+  <!-- END of LOGGING  -->
+
+  <!-- Command line options processing -->
+
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>4.6.1</version>
+		</dependency>
+
+  <!-- END of Command line options processing -->
+
+<!-- USED IN TESTS ONLY -->
+
+<!--
+ 		<dependency>
+			<groupId>com.ibm.jsonata4java</groupId>
+			<artifactId>JSONata4Java</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
+ -->
+<!--
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.8</version>
+		</dependency>
+
+ -->
+<!--
+		<dependency>
+			<groupId>com.hivemq</groupId>
+			<artifactId>hivemq-mqtt-client</artifactId>
+			<version>1.2.1</version>
+			<scope>test</scope>
+		</dependency>
+ -->
+
+		<!-- This is embedded mqtt broker for tests only! -->
+		<dependency>
+			<groupId>io.moquette</groupId>
+			<artifactId>moquette-broker</artifactId>
+			<version>0.15</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jcommon</artifactId>
+			<version>1.0.24</version>
+			<scope>test</scope>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>com.github.wendykierp</groupId>
+			<artifactId>JTransforms</artifactId>
+			<version>3.1</version>
+			<classifier>with-dependencies</classifier>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- TESTING -->
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<profiles>
+
+		<profile>
+			<id>fat-jar</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>${TheMainClass}</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+						<executions>
+							<execution>
+								<id>make-assembly</id> <!-- this is used for inheritance merges -->
+								<phase>package</phase> <!-- bind to the packaging phase -->
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+								<plugin> <!-- maven-resources-plugin -->
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.2.0</version>
+						<configuration>
+							<nonFilteredFileExtensions>
+								<nonFilteredFileExtension>jks</nonFilteredFileExtension>
+								<nonFilteredFileExtension>bin</nonFilteredFileExtension>
+								<nonFilteredFileExtension>exe</nonFilteredFileExtension>
+							</nonFilteredFileExtensions>
+							<propertiesEncoding>UTF-8</propertiesEncoding>
+							<encoding>UTF-8</encoding>
+						</configuration>
+						<executions>
+							<execution>
+								<id>default-build-copy</id>
+								<goals>
+									<goal>resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- ============ BASIC DEFAULT PROFILE BUILDS the EXE ======================== -->
+
+		<profile>
+
+<!-- 		THIS PROFILE IS ALWAYS ACTIVE UNLESS THE -P option present on the Maven Command Line. -->
+
+			<id>default-activated-profile-id</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<finalName>${executableName}</finalName>
+
+				<plugins>
+
+					<plugin> <!-- maven-clean-plugin -->
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>3.1.0</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>${project.basedir}/bundle/</directory>
+									<includes>
+										<include>${executableName}.jar</include>
+									</includes>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+
+					<plugin> <!-- maven-resources-plugin -->
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.2.0</version>
+						<configuration>
+							<nonFilteredFileExtensions>
+								<nonFilteredFileExtension>jks</nonFilteredFileExtension>
+								<nonFilteredFileExtension>bin</nonFilteredFileExtension>
+								<nonFilteredFileExtension>exe</nonFilteredFileExtension>
+							</nonFilteredFileExtensions>
+							<propertiesEncoding>UTF-8</propertiesEncoding>
+							<encoding>UTF-8</encoding>
+						</configuration>
+						<executions>
+							<execution>
+								<id>default-build-copy</id>
+								<goals>
+									<goal>resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>copy-jnlp-2-publish</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/publish</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>**/*.jnlp</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+
+
+						</executions>
+					</plugin>
+
+
+					<plugin> <!-- maven-compiler-plugin -->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>3.8.1</version>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>info.picocli</groupId>
+									<artifactId>picocli-codegen</artifactId>
+									<version>4.6.1</version>
+								</path>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+									<version>${version.lombok}</version>
+								</path>
+							</annotationProcessorPaths>
+							<compilerArgs>
+								<arg>${java.compile.options}</arg>
+							</compilerArgs>
+						</configuration>
+					</plugin>
+
+					<plugin> <!-- spring-boot-maven-plugin -->
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<version>${version.spring}</version>
+						<configuration>
+							<fork>true</fork>
+							<mainClass>${TheMainClass}</mainClass>
+							<outputDirectory>${project.basedir}/bundle/</outputDirectory>
+							<layout>JAR</layout>
+						</configuration>
+				<!-- This we need because we do not use parent pom see here https://docs.spring.io/spring-boot/docs/1.1.x/reference/html/howto-build.html#howto-create-an-additional-executable-jar -->
+						<executions>
+							<execution>
+								<id>spring-build-id</id>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>        <!-- maven-surefire-plugin -->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>3.0.0-M5</version>
+						<configuration>
+							<argLine>${jvm.run.options}</argLine>
+						</configuration>
+					</plugin>
+
+
+					<plugin> <!-- exec-maven-plugin -->
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>3.0.0</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<workingDirectory>${project.basedir}/warp-packer/</workingDirectory>
+							<executable>windows-x64.warp-packer</executable>
+							<arguments>
+								<argument>
+									--arch
+								</argument>
+								<argument>
+									windows-x64
+								</argument>
+								<argument>
+									--input_dir
+								</argument>
+								<argument>
+									${project.basedir}/bundle/
+								</argument>
+								<argument>
+									--exec
+								</argument>
+								<argument>
+									run-uart-recorder.bat
+								</argument>
+								<argument>
+									--output
+								</argument>
+								<argument>
+									${project.build.directory}/${executableName}-${project.version}.exe
+								</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+
+				<pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+					<plugins>
+                <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+						<plugin>
+							<artifactId>maven-clean-plugin</artifactId>
+							<version>3.1.0</version>
+						</plugin>
+                <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+						<plugin>
+							<artifactId>maven-resources-plugin</artifactId>
+							<version>3.0.2</version>
+						</plugin>
+						<plugin>
+							<artifactId>maven-compiler-plugin</artifactId>
+							<version>3.8.1</version>
+						</plugin>
+						<plugin>
+							<artifactId>maven-surefire-plugin</artifactId>
+							<version>2.22.1</version>
+						</plugin>
+						<plugin>
+							<artifactId>maven-install-plugin</artifactId>
+							<version>2.5.2</version>
+						</plugin>
+						<plugin>
+							<artifactId>maven-deploy-plugin</artifactId>
+							<version>2.8.2</version>
+						</plugin>
+                <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+						<plugin>
+							<artifactId>maven-site-plugin</artifactId>
+							<version>3.7.1</version>
+						</plugin>
+						<plugin>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>3.0.0</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-scm-plugin</artifactId>
+							<version>2.0.0-M1</version>
+						</plugin>
+						<plugin>
+							<groupId>com.google.code.maven-replacer-plugin</groupId>
+							<artifactId>replacer</artifactId>
+							<version>1.5.3</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jarsigner-plugin</artifactId>
+							<version>3.0.0</version>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>exec-maven-plugin</artifactId>
+							<version>3.0.0</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+
+			</build>
+		</profile>
+
+		<!--  ========================= webstart-publish-profile-id ================================ -->
+
+
+		<profile>
+		<!--
+
+		 TO ACTIVATE THIS PROFILE ADD ON THE maven COMMAND LINE
+
+		-P default-activated-profile-id,webstart-publish-profile-id
+
+		 -->
+			<id>webstart-publish-profile-id</id>
+			<activation>
+				<property>
+					<name>webstart-publish-profile-id</name>
+					<value>true</value>
+				</property>
+			</activation>
+
+			<build>
+				<plugins>
+			 <!-- Steps to publish JNLP for WebStart to the https://github.com/BorisDaich/vz-public-apps -->
+
+
+
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>clone</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push</id>
+								<phase>package</phase>
+								<goals>
+									<goal>checkin</goal>
+								</goals>
+								<configuration>
+						<!-- 	<includes>${executableName}__V${project.version}.jar</includes> -->
+									<includes>${executableName}.jnlp</includes>
+								</configuration>
+							</execution>
+						</executions>
+						<configuration>
+							<connectionType>connection</connectionType>
+							<checkoutDirectory>${project.build.directory}/publish</checkoutDirectory>
+							<message>${executableName}.jnlp ${project.version}</message>
+							<basedir>${project.build.directory}/publish</basedir>
+							<connectionUrl>scm:git:https://github.com/BorisDaich/vz-public-apps</connectionUrl>
+							<scmVersion>${executableName}</scmVersion>
+							<scmVersionType>branch</scmVersionType>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>3.3.0</version>
+						<configuration>
+							<finalName>${executableName}__V${project.version}</finalName>
+							<outputDirectory>${project.build.directory}/publish</outputDirectory>
+							<archive>
+								<index>true</index>
+								<manifest>
+									<mainClass>${TheMainClass}</mainClass>
+								</manifest>
+								<manifestEntries>
+									<Permissions>all-permissions</Permissions>
+									<Multi-Release>true</Multi-Release>
+								</manifestEntries>
+								<manifestSections>
+									<manifestSection>
+										<name>${executableName}__V${project.version}</name>
+										<manifestEntries>
+											<Project-Name>${project.artifactId}</Project-Name>
+											<Project-Version>${project.version}</Project-Version>
+											<Project-Built-Date>${maven.build.timestamp}</Project-Built-Date>
+										</manifestEntries>
+									</manifestSection>
+								</manifestSections>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+
+						<executions>
+							<execution>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<configuration>
+							<keystore>${project.basedir}/src/main/resources/webStartSignature.jks</keystore>
+							<alias>webStartStore</alias>
+							<archive>${project.build.directory}/publish/${executableName}__V${project.version}.jar</archive>
+					 <!-- TODO: MOVE THIS TO THE settings.xml -->
+					<!-- <keypass></keypass> -->
+							<storepass>Vz+Pass3WebStart</storepass>
+						</configuration>
+						<executions>
+
+							<execution>
+								<phase>prepare-package</phase>
+								<id>sign</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>native-image</id><!--  -->
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<version>0.9.10</version>
+						<extensions>true</extensions>
+						<executions>
+							<execution>
+								<id>build-native</id>
+								<goals>
+									<goal>build</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+							<execution>
+								<id>test-native</id>
+								<goals>
+									<goal>test</goal>
+								</goals>
+								<phase>test</phase>
+							</execution>
+						</executions>
+						<configuration>
+              <!-- ... -->
+							<mainClass>${TheMainClass}</mainClass>
+							<imageName>${executableName}</imageName>
+							<buildArgs>
+								<buildArg>--verbose</buildArg>
+							</buildArgs>
+						</configuration>
+					</plugin>
+
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
+	
+</project>

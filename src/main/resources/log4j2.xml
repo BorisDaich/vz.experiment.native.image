@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- log4j internal messages with level WARN or above only -->
+<!-- check the configuration file every 5 second -->
+<Configuration status="debug" monitorInterval="5" packages="biz.daich.logging">
+	<!-- status="WARN" -->
+
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%highlight{%-4.4r %d{HH:mm:ss,SSS} [%-25.25t] %-5.5level %-50.50logger{3.}.%-35.35M:%-4.4L - %msg}{STYLE=Logback}%n" disableAnsi="false" />
+		</Console>
+
+
+		<StringConsumerAppender name="StringConsumer">
+			<PatternLayout pattern="%highlight{%-4.4r %d{ABSOLUTE} [%-25.25t] %-5.5level %-50.50logger{3.}.%-35.35M:%-4.4L - %msg}{STYLE=Logback}%n" disableAnsi="false" />
+		</StringConsumerAppender>
+
+		<RollingFile name="rollingLogFile" fileName="rollingLog.log" filePattern="rollingLog-%d{yyyy-MM-dd-HH}-%i.log.gz" ignoreExceptions="true">
+
+			<PatternLayout pattern="%highlight{%-4.4r %d{DEFAULT} [%-25.25t] %-5.5level %-50.50logger{3.}.%-35.35M:%-4.4L - %msg}{STYLE=Logback}%n" disableAnsi="false" />
+
+
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10MB" />
+			</Policies>
+
+			<DefaultRolloverStrategy max="3" />
+		</RollingFile>
+		-->
+	</Appenders>
+
+	<Loggers>
+		<Root level="ALL" includeLocation="true">
+			<AppenderRef ref="Console" />
+			<!-- <AppenderRef ref="ASYNC_HTTP_Loggly" /> -->
+
+			<AppenderRef ref="StringConsumer" />
+			<AppenderRef ref="rollingLogFile" />
+		</Root>
+
+
+		<Logger name="io.netty" additivity="false" level="WARN">
+			<AppenderRef ref="Console" />
+		</Logger>
+
+
+		<Logger name="io.moquette.broker" additivity="false" level="WARN">
+			<AppenderRef ref="Console" />
+		</Logger>
+
+		<Logger name="io.moquette.interception" additivity="false" level="WARN">
+			<AppenderRef ref="Console" />
+		</Logger>
+
+		<!--
+		<Logger
+			name="org.springframework"
+			additivity="false"
+			level="WARN"
+		>
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger
+			name="io.netty"
+			additivity="false"
+			level="WARN"
+		>
+			<AppenderRef ref="Console" />
+		</Logger>
+
+		<Logger
+			name="dataLog"
+			additivity="false"
+			level="ALL"
+		>
+            <AppenderRef ref="rollingDataLogFile" />
+		</Logger>
+		-->
+	</Loggers>
+</Configuration>
