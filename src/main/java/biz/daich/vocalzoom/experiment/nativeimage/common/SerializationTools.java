@@ -3,8 +3,8 @@ package biz.daich.vocalzoom.experiment.nativeimage.common;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import de.undercouch.bson4jackson.BsonFactory;
 
 public class SerializationTools implements IGlobals {
-	private static final Logger l = LogManager.getLogger(SerializationTools.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(SerializationTools.class.getName());
 
 	/**
 	 * Read and write BSON. Used mainly for the Sensor Raw Data sending / receiving over MQTT /[projectID]/[deviceId]/data topic

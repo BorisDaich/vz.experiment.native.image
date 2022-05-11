@@ -14,8 +14,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jfree.chart.axis.NumberAxis;
 
 import com.google.common.collect.EvictingQueue;
@@ -30,13 +28,17 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  *
  * TODO: Boris need somehow reduce duplication with {@link PanelEsp32ChartRaw}
  * this is tool to show Raw UART DATA Messages stream from a Sensor's
  */
 public class PanelBaseRawDataGraph extends JPanel implements IHasEventBus, Consumer<SensorRawDataMsg> {
-	private static final Logger l = LogManager.getLogger(PanelBaseRawDataGraph.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(PanelBaseRawDataGraph.class.getName());
 
 	protected static final SimpleDateFormat DateFormatWithMilliseconds = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 

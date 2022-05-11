@@ -14,9 +14,8 @@
 		<maven.compiler.release>${java.version}</maven.compiler.release>
 		<maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
 
-		<version.spring>2.6.3</version.spring>
+		<version.spring>2.6.6</version.spring>
 		<version.lombok>1.18.22</version.lombok>
-		<version.log4j>2.17.1</version.log4j>
 		<graalvm.version>21.0.0.2</graalvm.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,14 +52,14 @@
 	</dependencyManagement>
 
 	<dependencies>
-
+<!--
 		<dependency>
 			<groupId>org.graalvm.nativeimage</groupId>
 			<artifactId>native-image-maven-plugin</artifactId>
 			<version>21.2.0</version>
 			<type>maven-plugin</type>
 		</dependency>
-
+-->
 		<!-- SPRING BOOT WEB -->
 
 		<dependency>
@@ -230,13 +229,18 @@
 			<artifactId>log4j-iostreams</artifactId>
 		</dependency>
 -->
+	<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.11</version>
+		</dependency>
 
-<dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-to-slf4j</artifactId>
-    <version>2.17.2</version>
-</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>1.18</version>
+		</dependency>
 
 		<!--  https://mvnrepository.com/artifact/com.lmax/disruptor -->
 		
@@ -573,38 +577,7 @@
 							</archive>
 						</configuration>
 					</plugin>
-					
-					<plugin>
-						<groupId>org.graalvm.buildtools</groupId>
-						<artifactId>native-maven-plugin</artifactId>
-						<version>0.9.10</version>
-						<extensions>true</extensions>
-						<executions>
-							<execution>
-								<id>build-native</id>
-								<goals>
-									<goal>build</goal>
-								</goals>
-								<phase>package</phase>
-							</execution>
-							<execution>
-								<id>test-native</id>
-								<goals>
-									<goal>test</goal>
-								</goals>
-								<phase>test</phase>
-							</execution>
-						</executions>
-						<configuration>
-							<!-- ... -->
-							<mainClass>${TheMainClass}</mainClass>
-							<imageName>${executableName}</imageName>
-							<buildArgs>
-								<buildArg>--verbose</buildArg>
-							</buildArgs>
-						</configuration>
-					</plugin>
-					
+			
 				</plugins>
 
 				<pluginManagement>

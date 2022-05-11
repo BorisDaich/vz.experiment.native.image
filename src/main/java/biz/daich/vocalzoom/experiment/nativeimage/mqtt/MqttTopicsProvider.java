@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -26,7 +28,7 @@ import lombok.Getter;
  * extracts the projectIDs into the {@code projectsList} and devices IDs into the {@code devicesList}
  */
 public class MqttTopicsProvider implements Closeable {
-	private static final Logger l = LogManager.getLogger(MqttTopicsProvider.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(MqttTopicsProvider.class.getName());
 
 	/**
 	 * as long as mqttClient is connected it keeps updating

@@ -9,11 +9,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class JFrame4Testing extends JFrame {
-	private static final Logger l = LogManager.getLogger(JFrame4Testing.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(JFrame4Testing.class.getName());
 
 	private JPanel contentPane;
 

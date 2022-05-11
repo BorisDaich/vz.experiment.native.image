@@ -18,8 +18,11 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -33,7 +36,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class MqttConnectionManager2 {
-	private static final Logger l = LogManager.getLogger(MqttConnectionManager2.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(MqttConnectionManager2.class.getName());
 
 	protected static MqttConnectionManager2 singletonInstance = null;
 	protected static MemoryPersistence persistence = null;

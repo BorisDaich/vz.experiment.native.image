@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -33,7 +35,7 @@ import lombok.ToString;
  *
  */
 public class VzMqttClient extends MqttClient {
-	private static final Logger l = LogManager.getLogger(VzMqttClient.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(VzMqttClient.class.getName());
 
 	protected MqttConnectOptions mqttConnectOptions = null;
 	@Getter

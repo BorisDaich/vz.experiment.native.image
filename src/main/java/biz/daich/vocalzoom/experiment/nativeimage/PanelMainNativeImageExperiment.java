@@ -12,8 +12,6 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -31,8 +29,11 @@ import biz.daich.vocalzoom.experiment.nativeimage.mqtt.MqttBaseConfig;
 import biz.daich.vocalzoom.experiment.nativeimage.mqtt.MqttConnectionManager2;
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PanelMainNativeImageExperiment extends JXPanel {
-	private static final Logger l = LogManager.getLogger(PanelMainNativeImageExperiment.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(PanelMainNativeImageExperiment.class.getName());
 
 	private JButton btnAddTab;
 	private JButton btnExit;

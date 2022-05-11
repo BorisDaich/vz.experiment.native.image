@@ -6,8 +6,9 @@ import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.function.Function;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -17,7 +18,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 public interface UtilsMqtt {
-	static final Logger l = LogManager.getLogger(UtilsMqtt.class.getName());
+	static final Logger l = LoggerFactory.getLogger(UtilsMqtt.class.getName());
 
 	public static class BadTopicNameException extends Exception {
 		public BadTopicNameException(String s) {

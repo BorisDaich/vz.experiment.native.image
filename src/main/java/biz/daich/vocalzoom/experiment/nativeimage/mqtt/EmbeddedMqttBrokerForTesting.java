@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.moquette.broker.Server;
 import io.moquette.broker.config.MemoryConfig;
@@ -17,7 +17,7 @@ import io.netty.buffer.ByteBuf;
  * just a wrapper to make sure that the server is stoped when goes out of scope of a test
  */
 public class EmbeddedMqttBrokerForTesting extends Server implements AutoCloseable {
-	private static final Logger l = LogManager.getLogger(EmbeddedMqttBrokerForTesting.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(EmbeddedMqttBrokerForTesting.class.getName());
 
 	@Override
 	public void close() throws Exception {

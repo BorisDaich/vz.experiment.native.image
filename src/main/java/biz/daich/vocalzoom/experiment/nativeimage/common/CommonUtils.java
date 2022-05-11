@@ -13,8 +13,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import lombok.Data;
@@ -22,7 +23,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Option;
 
 public class CommonUtils extends SerializationTools {
-	static final Logger l = LogManager.getLogger(CommonUtils.class.getName());
+	static final Logger l = LoggerFactory.getLogger(CommonUtils.class.getName());
 
 	public final static SimpleDateFormat FILE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
 
@@ -103,13 +104,14 @@ public class CommonUtils extends SerializationTools {
 	 */
 	public static <T extends AbstractBaseCmdConfig> CommandLine processCmd(String[] args, T t, boolean printHelpIfRequested) {
 
-		
 		CommandLine cmdLine = new CommandLine(t).setUnmatchedArgumentsAllowed(true);
 		if (args == null) {
 			args = new String[] {};
 		}
 		cmdLine.parseArgs(args);
-		l.info("CmdArgs Obj = {}", () -> toPrettyJson(t));
+		if (l.isInfoEnabled()) {
+			l.info("CmdArgs Obj = {}", toPrettyJson(t));
+		}
 		if (printHelpIfRequested && t.helpRequested) {
 			cmdLine.usage(System.out);
 		}

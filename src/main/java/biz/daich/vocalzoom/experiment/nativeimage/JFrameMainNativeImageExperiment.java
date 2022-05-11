@@ -1,24 +1,23 @@
 package biz.daich.vocalzoom.experiment.nativeimage;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import biz.daich.vocalzoom.experiment.nativeimage.cmd.RawDataRecorderConfig;
 import biz.daich.vocalzoom.experiment.nativeimage.common.CommonUtils;
 import biz.daich.vocalzoom.experiment.nativeimage.common.SerializationTools;
 import picocli.CommandLine;
 
-import javax.swing.border.TitledBorder;
-
 public class JFrameMainNativeImageExperiment extends JFrame {
-	private static final Logger l = LogManager.getLogger(JFrameMainNativeImageExperiment.class.getName());
+	private static final Logger l = LoggerFactory.getLogger(JFrameMainNativeImageExperiment.class.getName());
 
 	private JPanel contentPane;
 	private PanelMainNativeImageExperiment panelMainNativeImageExperiment;
